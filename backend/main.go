@@ -2,11 +2,16 @@ package main
 
 import (
 	"backend/Handlers"
+	"log"
 	"net/http"
 )
 
 func main() {
 	http.HandleFunc("/health-check", Handlers.HealthCheck)
 	http.HandleFunc("/chat", Handlers.Chat)
-	http.ListenAndServe("localhost:8080", nil)
+	http.HandleFunc("/text-to-query", Handlers.TextToQuery)
+	log.Println("Starting Server")
+	if err := http.ListenAndServe("localhost:8080", nil); err != nil {
+		log.Fatalln(err)
+	}
 }
