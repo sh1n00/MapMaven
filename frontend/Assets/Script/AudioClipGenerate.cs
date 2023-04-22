@@ -23,8 +23,8 @@ public class AudioClipGenerate : MonoBehaviour
     private AudioClip clip;
 
     private string targetDevice = "";
-
     private string outputFilePath = "Assets/output.wav";
+    public static string wavBase64;
     
     // Start is called before the first frame update
     void Start()
@@ -59,7 +59,10 @@ public class AudioClipGenerate : MonoBehaviour
         if (Input.GetKeyUp(KeyCode.Space)) {
             // 録音を停止する
             Microphone.End(null);
+            var wavByte =Wav.ToWav(clip);
             Wav.ExportWav(clip, outputFilePath);
+            wavBase64 = Convert.ToBase64String(wavByte);
+            Debug.Log(wavBase64);
             Debug.Log("Export WAV");
         }
         
