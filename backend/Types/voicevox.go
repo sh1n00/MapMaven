@@ -1,22 +1,31 @@
 package Types
 
 type Moras struct {
-	Text            string  `json:"text"`
-	Consonant       string  `json:"consonant"`
-	ConsonantLength float64 `json:"consonant_length"`
-	Vowel           string  `json:"vowel"`
-	VowelLength     float64 `json:"vowel_length"`
-	Pitch           float64 `json:"pitch"`
+	Text            string   `json:"text"`
+	Consonant       *string  `json:"consonant"`
+	ConsonantLength *float64 `json:"consonant_length"`
+	Vowel           string   `json:"vowel"`
+	VowelLength     float64  `json:"vowel_length"`
+	Pitch           float64  `json:"pitch"`
 }
 
 type AccentPhrases struct {
-	Moras           []Moras `json:"moras"`
-	Accent          int     `json:"accent"`
-	PauseMora       string  `json:"pause_mora"`
-	IsInterrogative bool    `json:"is_interrogative"`
+	Moras           []Moras    `json:"moras"`
+	Accent          int        `json:"accent"`
+	PauseMora       *PauseMora `json:"pause_mora"`
+	IsInterrogative *bool      `json:"is_interrogative"`
 }
 
-type Response struct {
+type PauseMora struct {
+	Text            string  `json:"text"`
+	Consonant       string  `json:"consonant"`
+	ConsonantLength int     `json:"consonant_length"`
+	Vowel           string  `json:"vowel"`
+	VowelLength     int     `json:"vowel_length"`
+	Pitch           float64 `json:"pitch"`
+}
+
+type VoiceVox struct {
 	AccentPhrases      []AccentPhrases `json:"accent_phrases"`
 	SpeedScale         float64         `json:"speedScale"`
 	PitchScale         float64         `json:"pitchScale"`

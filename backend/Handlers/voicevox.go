@@ -48,9 +48,12 @@ func TextToQuery(text string, speaker string) (*Types.VoiceVox, error) {
 }
 
 func TextToAudio(w http.ResponseWriter, r *http.Request) {
-	//content := r.URL.Query().Get("content")
 	url := "http://localhost:50021/synthesis"
-	reqBody, err := TextToQuery("こんにちわ", "1")
+	speaker := r.URL.Query().Get("speaker")
+	enableInterrogativeUpspeak := r.URL.Query().Get("enable_interrogative_upspeak")
+	text := r.URL.Query().Get("text")
+
+	reqBody, err := TextToQuery(text, speaker)
 	if err != nil {
 		log.Println(err)
 		utils.HandleError(w, http.StatusInternalServerError, err.Error())
@@ -72,8 +75,8 @@ func TextToAudio(w http.ResponseWriter, r *http.Request) {
 	}
 
 	q := req.URL.Query()
-	q.Add("speaker", "1")
-	q.Add("enable_interrogative_upspeak", "true")
+	q.Add("speaker", speaker)
+	q.Add("enable_interrogative_upspeak", enableInterrogativeUpspeak)
 	req.URL.RawQuery = q.Encode()
 
 	req.Header.Set("Content-Type", "application/json")
