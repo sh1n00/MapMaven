@@ -1,0 +1,3 @@
+[submodule "backend/backend/voicevox_engine"]
+	path = backend/backend/voicevox_engine
+	url = git@github.com:VOICEVOX/voicevox_engine.git
