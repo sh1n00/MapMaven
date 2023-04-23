@@ -60,7 +60,8 @@ func TextToAudio(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	jsonReqBody, err := json.Marshal(reqBody)
+	jsonReqBody, err := json.MarshalIndent(reqBody, "", "  ")
+	log.Println(string(jsonReqBody))
 	if err != nil {
 		log.Println(err)
 		utils.HandleError(w, http.StatusInternalServerError, err.Error())
@@ -103,7 +104,20 @@ func TextToAudio(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if err = os.WriteFile("audio.wav", body, os.ModePerm); err != nil {
+	audioReponse := Types.AudioResponse{
+		AudioBinary: body,
+	}
+
+	jsonBytes, err := json.Marshal(audioReponse)
+	if err != nil {
+		log.Println(err)
+		utils.HandleError(w, http.StatusInternalServerError, err.Error())
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(jsonBytes)
+
+	if err = os.WriteFile("./output/audio.wav", body, os.ModePerm); err != nil {
 		log.Println(err)
 		utils.HandleError(w, http.StatusInternalServerError, err.Error())
 		return
