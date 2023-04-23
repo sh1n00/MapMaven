@@ -23,7 +23,7 @@ public class AudioThreshold : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        samples = new float[1024];
+        //samples = new float[1024];
         // マイク入力の設定
         AudioSettings.GetDSPBufferSize(out var bufferLength, out var numBuffers);
 
@@ -43,11 +43,12 @@ public class AudioThreshold : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        samples = new float[recordedClip.samples * recordedClip.channels];
+        //float[] samples = new float[audioSource.clip.samples];; // マイクから取得したサンプルデータ
+        samples = new float[1024];
         recordedClip.GetData(samples, 0);
 
         float sum = 0;
-        float amplitude;
+        float amplitude = 0;
         for (int i = 0; i < samples.Length; i++)
         {
             sum += Mathf.Abs(samples[i]);
@@ -83,6 +84,7 @@ public class AudioThreshold : MonoBehaviour
             Wav.ExportWav(recordedClip, outputFilePath);
             //Microphone.End(null);
             Debug.Log("End Recording");
+            recordedClip = recordedClip = Microphone.Start(null, true, (int)minSilenceTime, AudioSettings.outputSampleRate);
         }
     }
         

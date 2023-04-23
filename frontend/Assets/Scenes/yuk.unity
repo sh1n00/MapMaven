@@ -409,6 +409,7 @@ GameObject:
   - component: {fileID: 1117735072}
   - component: {fileID: 1117735076}
   - component: {fileID: 1117735079}
+  - component: {fileID: 1117735080}
   - component: {fileID: 1117735075}
   - component: {fileID: 1117735077}
   - component: {fileID: 1117735078}
@@ -461,7 +462,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: f15f06eb017b34043a6da68d37073311, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 1aa5cae0e5f2641eda120734de5f267d, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
@@ -579,7 +580,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1117735071}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 05a4349c4ad3c47bd98ea30e7e538abc, type: 3}
   m_Name: 
@@ -589,3 +590,17 @@ MonoBehaviour:
   minSilenceTime: 1
   outputFilePath: Assets/output.wav
   m_DeviceName: "MacBook Air\u306E\u30DE\u30A4\u30AF"
+--- !u!114 &1117735080
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1117735071}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dcef5a0342c5f4531b3b58c6e30fc68b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  audioSource: {fileID: 1117735076}
+  sensitivity: 0.01
