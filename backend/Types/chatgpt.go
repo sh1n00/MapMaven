@@ -10,6 +10,33 @@ type ChatGPTRequest struct {
 	Messages []Message `json:"messages"`
 }
 
+type EmbeddingRequest struct {
+	Input string `json:"input"`
+	Model string `json:"model"`
+}
+
+type EmbeddingRequestOptions struct {
+	Encoding string `json:"encoding,omitempty"`
+}
+
+type Embedding struct {
+	Object string     `json:"object"`
+	Data   []Embed    `json:"data"`
+	Model  string     `json:"model"`
+	Usage  EmbedUsage `json:"usage"`
+}
+
+type Embed struct {
+	Object    string    `json:"object"`
+	Embedding []float64 `json:"embedding"`
+	Index     int       `json:"index"`
+}
+
+type EmbedUsage struct {
+	PromptTokens int `json:"prompt_tokens"`
+	TotalTokens  int `json:"total_tokens"`
+}
+
 type ChatGPTResponse struct {
 	ID      string `json:"id"`
 	Object  string `json:"object"`

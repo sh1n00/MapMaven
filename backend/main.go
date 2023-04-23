@@ -14,4 +14,6 @@ func main() {
 	if err := http.ListenAndServe("localhost:8080", nil); err != nil {
 		log.Fatalln(err)
 	}
+	http.HandleFunc("/embeddings", Handlers.Embeddings)
+	http.ListenAndServe("localhost:8080", nil)
 }

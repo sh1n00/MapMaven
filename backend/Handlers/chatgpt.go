@@ -6,6 +6,7 @@ import (
 	"backend/utils"
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"io"
 	"log"
 	"net/http"
@@ -133,4 +134,63 @@ func Chat(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+}
+
+func Embeddings(w http.ResponseWriter, r *http.Request) {
+	url := "https://api.openai.com/v1/embeddings"
+
+	reqBody := Types.EmbeddingRequest{
+		Input: "Hello",
+		Model: "text-embedding-ada-002",
+	}
+
+	jsonReqBody, err := json.Marshal(reqBody)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	req, err := http.NewRequest("POST", url, bytes.NewBuffer(jsonReqBody))
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Authorization", "Bearer "+Settings.OPENAIAPIKEY)
+
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	log.Println(resp)
+	defer resp.Body.Close()
+	if resp.StatusCode != http.StatusOK {
+		fmt.Println("Status: ", resp.Status)
+		return
+	}
+
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	var embeddingResponse Types.Embedding
+	err = json.Unmarshal(body, &embeddingResponse)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	jsonRespBody, err := json.Marshal(embeddingResponse)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(jsonRespBody)
 }
