@@ -139,8 +139,10 @@ func Chat(w http.ResponseWriter, r *http.Request) {
 func Embeddings(w http.ResponseWriter, r *http.Request) {
 	url := "https://api.openai.com/v1/embeddings"
 
+	input := r.URL.Query().Get("input")
+
 	reqBody := Types.EmbeddingRequest{
-		Input: "Hello",
+		Input: input,
 		Model: "text-embedding-ada-002",
 	}
 
