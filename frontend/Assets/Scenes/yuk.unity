@@ -461,7 +461,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 0}
+  m_audioClip: {fileID: 8300000, guid: f15f06eb017b34043a6da68d37073311, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
@@ -584,7 +584,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 05a4349c4ad3c47bd98ea30e7e538abc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sensitivity: 0.02
+  sensitivity: 0.2
   maxRecordTime: 10
   minSilenceTime: 1
   outputFilePath: Assets/output.wav

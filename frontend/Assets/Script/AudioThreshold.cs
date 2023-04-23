@@ -46,12 +46,15 @@ public class AudioThreshold : MonoBehaviour
         samples = new float[recordedClip.samples * recordedClip.channels];
         recordedClip.GetData(samples, 0);
 
-        float amplitude = 0;
+        float sum = 0;
+        float amplitude;
         for (int i = 0; i < samples.Length; i++)
         {
-            amplitude += Mathf.Abs(samples[i]);
+            sum += Mathf.Abs(samples[i]);
         }
-        amplitude /= samples.Length;
+        //amplitude /= samples.Length;
+        amplitude = Mathf.Clamp01(sum * 1f / (float)samples.Length);
+
 
         Debug.Log(amplitude);
         
