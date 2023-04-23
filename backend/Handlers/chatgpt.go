@@ -132,4 +132,5 @@ func Chat(w http.ResponseWriter, r *http.Request) {
 		utils.HandleError(w, http.StatusInternalServerError, err.Error())
 		return
 	}
+
 }

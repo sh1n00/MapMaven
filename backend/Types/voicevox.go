@@ -17,12 +17,12 @@ type AccentPhrases struct {
 }
 
 type PauseMora struct {
-	Text            string  `json:"text"`
-	Consonant       string  `json:"consonant"`
-	ConsonantLength int     `json:"consonant_length"`
-	Vowel           string  `json:"vowel"`
-	VowelLength     int     `json:"vowel_length"`
-	Pitch           float64 `json:"pitch"`
+	Text            string   `json:"text"`
+	Consonant       *string  `json:"consonant"`
+	ConsonantLength *float64 `json:"consonant_length"`
+	Vowel           string   `json:"vowel"`
+	VowelLength     float64  `json:"vowel_length"`
+	Pitch           float64  `json:"pitch"`
 }
 
 type VoiceVox struct {
@@ -36,4 +36,8 @@ type VoiceVox struct {
 	OutputSamplingRate int             `json:"outputSamplingRate"`
 	OutputStereo       bool            `json:"outputStereo"`
 	Kana               string          `json:"kana"`
+}
+
+type AudioResponse struct {
+	AudioBinary []byte `json:"audio_binary"`
 }
