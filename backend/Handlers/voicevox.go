@@ -104,11 +104,11 @@ func TextToAudio(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	audioReponse := Types.AudioResponse{
+	audioResponse := Types.AudioResponse{
 		AudioBinary: body,
 	}
 
-	jsonBytes, err := json.Marshal(audioReponse)
+	jsonBytes, err := json.Marshal(audioResponse)
 	if err != nil {
 		log.Println(err)
 		utils.HandleError(w, http.StatusInternalServerError, err.Error())
