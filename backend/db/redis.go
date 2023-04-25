@@ -21,7 +21,5 @@ func NewRedisHandler() *RedisHandler {
 	if _, err := redisClient.Ping().Result(); err != nil {
 		log.Fatalln(err)
 	}
-
 	return &RedisHandler{Conn: redisClient}
-
 }
