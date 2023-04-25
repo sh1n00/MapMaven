@@ -97,6 +97,15 @@ func Chat(content string) (*Types.ChatGPTResponse, error) {
 	return &chatGPTResponse, nil
 }
 
+//func Register(input string) error {
+//	embedding, err := Embeddings(input)
+//	if err != nil {
+//		return err
+//	}
+//
+//	return nil
+//}
+
 func Embeddings(input string) (*Types.Embedding, error) {
 	url := Settings.CHATGPTAPIBASEURL + "embeddings"
 
@@ -141,19 +150,9 @@ func Embeddings(input string) (*Types.Embedding, error) {
 	return &embeddingResponse, nil
 }
 
-func CalcCosSimilarity(text1, text2 string) (float64, error) {
-	text1Embedded, err := Embeddings(text1)
-	if err != nil {
-		return 0.0, err
-	}
-
-	text2Embedded, err := Embeddings(text2)
-	if err != nil {
-		return 0.0, err
-	}
-
-	text1Vector := text1Embedded.Data[0].Embedding
-	text2Vector := text2Embedded.Data[0].Embedding
+func CalcCosSimilarity(text1, text2 *Types.Embedding) (float64, error) {
+	text1Vector := text1.Data[0].Embedding
+	text2Vector := text2.Data[0].Embedding
 
 	cosinSim, err := utils.Cosine(text1Vector, text2Vector)
 	if err != nil {
