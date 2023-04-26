@@ -12,6 +12,7 @@ public class VoiceAssistant : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        Debug.Log(PhraseRecognitionSystem.isSupported);
         //Create keywords for keyword recognizer
         keywords.Add("activate", () =>
         {
