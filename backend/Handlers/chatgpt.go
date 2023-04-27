@@ -1,108 +1,83 @@
 package Handlers
 
 import (
-	"backend/Settings"
-	"backend/Types"
-	"bytes"
+	"backend/Services"
+	"backend/utils"
 	"encoding/json"
-	"io"
 	"log"
 	"net/http"
+	"strings"
 )
 
 // HealthCheck ChatGPTAPI通信確認用
 func HealthCheck(w http.ResponseWriter, r *http.Request) {
-	url := "https://api.openai.com/v1/chat/completions"
-	reqBody := Types.ChatGPTRequest{
-		Model:    "gpt-3.5-turbo",
-		Messages: []Types.Message{{Role: "user", Content: "Hello"}},
-	}
-	jsonReqBody, err := json.Marshal(reqBody)
+	chatGPTResponse, err := Services.HealthCheck()
 	if err != nil {
-		log.Println(err)
-		return
-	}
-	req, err := http.NewRequest("POST", url, bytes.NewBuffer(jsonReqBody))
-	if err != nil {
-		log.Println(err)
-		return
+		utils.HandleError(w, http.StatusInternalServerError, err.Error())
 	}
 
-	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("Authorization", "Bearer "+Settings.OPENAIAPIKEY)
-
-	client := &http.Client{}
-	resp, err := client.Do(req)
-	if err != nil {
+	if err = json.NewEncoder(w).Encode(chatGPTResponse); err != nil {
 		log.Println(err)
+		utils.HandleError(w, http.StatusInternalServerError, err.Error())
 		return
 	}
-	defer resp.Body.Close()
-
-	if resp.StatusCode != http.StatusOK {
-		log.Println("Status: ", resp.Status)
-		return
-	}
-
-	body, err := io.ReadAll(resp.Body)
-	if err != nil {
-		log.Println(err)
-		return
-	}
-
-	var response Types.ChatGPTResponse
-	if err = json.Unmarshal(body, &response); err != nil {
-		log.Println(err)
-		return
-	}
-	json.NewEncoder(w).Encode(response)
 }
 
 // Chat ChatGPTにMessageを送る
 func Chat(w http.ResponseWriter, r *http.Request) {
 	content := r.URL.Query().Get("content")
-	url := "https://api.openai.com/v1/chat/completions"
-	reqBody := Types.ChatGPTRequest{
-		Model:    "gpt-3.5-turbo",
-		Messages: []Types.Message{{Role: "user", Content: content}},
-	}
-	jsonReqBody, err := json.Marshal(reqBody)
+
+	chatGPTResponse, err := Services.Chat(content)
 	if err != nil {
 		log.Println(err)
+		utils.HandleError(w, http.StatusInternalServerError, err.Error())
 		return
 	}
-	req, err := http.NewRequest("POST", url, bytes.NewBuffer(jsonReqBody))
+
+	if err = json.NewEncoder(w).Encode(chatGPTResponse); err != nil {
+		log.Println(err)
+		utils.HandleError(w, http.StatusInternalServerError, err.Error())
+		return
+	}
+}
+
+// GuideByText CalcEmbeddings 入力テキストに基づいて道案内を行う
+func GuideByText(w http.ResponseWriter, r *http.Request) {
+	text := r.URL.Query().Get("text")
+
+	textEmbedded, err := utils.Embeddings(text)
 	if err != nil {
 		log.Println(err)
+		utils.HandleError(w, http.StatusInternalServerError, err.Error())
 		return
 	}
 
-	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("Authorization", "Bearer "+Settings.OPENAIAPIKEY)
-
-	client := &http.Client{}
-	resp, err := client.Do(req)
+	m, err := Services.CreateInstructCossimMap(textEmbedded)
 	if err != nil {
 		log.Println(err)
-		return
-	}
-	defer resp.Body.Close()
-
-	if resp.StatusCode != http.StatusOK {
-		log.Println("Status: ", resp.Status)
+		utils.HandleError(w, http.StatusInternalServerError, err.Error())
 		return
 	}
 
-	body, err := io.ReadAll(resp.Body)
+	// コサイン類似度の高い順にソート
+	mSorted := utils.InstructSortByCosin(m)
+
+	// TopNを抜き出す処理
+	selectedInstructions := Services.SelectInstruction(mSorted, 3)
+
+	// prompt作成処理
+	prompt := utils.GenerateTemplate(strings.Join(selectedInstructions, "\n"), text)
+	chatGPTResponse, err := Services.Chat(prompt)
 	if err != nil {
 		log.Println(err)
+		utils.HandleError(w, http.StatusInternalServerError, err.Error())
 		return
 	}
 
-	var response Types.ChatGPTResponse
-	if err = json.Unmarshal(body, &response); err != nil {
+	if err = json.NewEncoder(w).Encode(chatGPTResponse); err != nil {
 		log.Println(err)
+		utils.HandleError(w, http.StatusInternalServerError, err.Error())
 		return
 	}
-	json.NewEncoder(w).Encode(response)
+
 }
