@@ -1,7 +1,7 @@
 package db
 
 import (
-	"backend/Services"
+	"backend/utils"
 	"encoding/json"
 	"github.com/go-redis/redis"
 	"log"
@@ -27,7 +27,7 @@ func init() {
 	}
 
 	for _, instruction := range instructions {
-		embedding, err := Services.Embeddings(instruction)
+		embedding, err := utils.Embeddings(instruction)
 		if err != nil {
 			log.Println(err)
 		}
