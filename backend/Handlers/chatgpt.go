@@ -25,7 +25,7 @@ func HealthCheck(w http.ResponseWriter, r *http.Request) {
 
 // Chat ChatGPTにMessageを送る
 func Chat(w http.ResponseWriter, r *http.Request) {
-	content := r.URL.Query().Get("content")
+	content := r.URL.Query().Get("text")
 
 	chatGPTResponse, err := Services.Chat(content)
 	if err != nil {
