@@ -310,6 +310,7 @@ MonoBehaviour:
   audioSource: {fileID: 705098750}
   thinkingClip: {fileID: 8300000, guid: 66b1be05e6c95fc4daaed86e977da20f, type: 3}
   streamingRecord: {fileID: 1851106037}
+  animator: {fileID: 642442972}
 --- !u!1 &460486162
 GameObject:
   m_ObjectHideFlags: 0
@@ -394,6 +395,11 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!95 &642442972 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 2496996420348981046, guid: fd9cbc0d18830425785f63891dc0533a, type: 3}
+  m_PrefabInstance: {fileID: 1797454448}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &705098748
 GameObject:
   m_ObjectHideFlags: 0

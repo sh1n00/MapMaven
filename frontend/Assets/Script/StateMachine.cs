@@ -11,6 +11,7 @@ public class StateMachine : MonoBehaviour
     public AudioClip thinkingClip;
     private bool isAudioPlay;
     public StreamingRecord streamingRecord;
+    public Animator animator;
     private bool isStandBy = false;
     private bool isAwaitReply = false;
     private enum gameState
@@ -29,18 +30,31 @@ public class StateMachine : MonoBehaviour
         switch(_currentState)
         {
             case gameState.standby://not user 
-                if(!isStandBy)streamingRecord.StartListening();
+                if (!isStandBy)
+                {
+                    
+                    streamingRecord.StartListening();
+                    
+                }
+                animator.SetBool("toReply", false);
+                animator.SetBool("toStandBy", true);
                 isStandBy = true;
                 isAudioPlay = false;
                 break;
             case gameState.recognition://user talk start
                 isStandBy = false;
+                animator.SetBool("toStandBy", false);
+                animator.SetBool("toThink", true);
                 break;
             case gameState.awaitReply://user talk end and chatgpt
-                if (!isStandBy) streamingRecord.StartListening();
+                //if (!isStandBy) streamingRecord.StartListening();
+                animator.SetBool("toStandBy", false);
+                animator.SetBool("toThink", true);
                 if (!isAwaitReply)
                 {
+                    //animator.SetBool("toReply", true);
                     audioSource.PlayOneShot(thinkingClip);
+                    
                 }
                 isAwaitReply = true;
 
@@ -48,10 +62,13 @@ public class StateMachine : MonoBehaviour
             case gameState.reply://avater talk
                 isStandBy = false;
                 isAwaitReply = false;
+                animator.SetBool("toThink", false);
+                animator.SetBool("toReply", true);
                 if (!audioSource.isPlaying && isAudioPlay)
                 {
                     _currentState = gameState.standby;
                     
+
                 }
                 break;
         }
@@ -72,6 +89,7 @@ public class StateMachine : MonoBehaviour
     public void StartRecognition()
     {
         _currentState= gameState.recognition;
+        
 
     }
 
