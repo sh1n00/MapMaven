@@ -67,6 +67,7 @@ func GuideByText(w http.ResponseWriter, r *http.Request) {
 
 	// prompt作成処理
 	prompt := utils.GenerateTemplate(strings.Join(selectedInstructions, "\n"), text)
+	log.Println(prompt)
 	chatGPTResponse, err := Services.Chat(prompt)
 	if err != nil {
 		log.Println(err)
