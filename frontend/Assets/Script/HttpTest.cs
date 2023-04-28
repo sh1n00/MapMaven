@@ -27,9 +27,48 @@ public class HttpTest : MonoBehaviour
         ////
         //// // Play the AudioClip
         //AudioSource.PlayClipAtPoint(clip, transform.position);
+        AudioSource audioSource = GetComponent<AudioSource>();
+        var test1 = await GuideByText("サイバネティクスの場所はどこですか?");
+        var test = await TextToAudio("1", "true", test1);
+        byte[] binaryData = Convert.FromBase64String(test);
+        AudioClip clip = Wav.ToAudioClip(binaryData, "test");
+        audioSource.PlayOneShot(clip);
     }
 
-    private async Task<String> TextToAudio(string speaker, string enable_interrogative_upspeak, string text)
+    private async Task<string> GuideByText(string text)
+    {
+        var url = "http://localhost:8080/guide-by-text";
+        var query = new Dictionary<String, String>
+        {
+            { "text", text },
+        };
+        var queryString = System.Web.HttpUtility.ParseQueryString("");
+     
+        foreach (KeyValuePair<String, String> pair in query)
+        {
+            queryString.Add(pair.Key, pair.Value);   
+        }
+       
+        var uriBuilder = new UriBuilder(url)
+        {
+            Query = queryString.ToString()
+        };
+        
+        try
+        {
+            var response = await _httpClient.GetAsync(uriBuilder.Uri);
+            var responseBody = await response.Content.ReadAsStringAsync();
+            ChatCompletionResponse json = JsonUtility.FromJson<ChatCompletionResponse>(responseBody);
+            return json.choices[0].message.content;
+        }
+        catch (HttpRequestException e)
+        {
+            Debug.Log($"HTTP request failed: {e}");
+            return "text";
+        }
+    }
+
+    private async Task<string> TextToAudio(string speaker, string enable_interrogative_upspeak, string text)
     {
 
         HttpClient _httpClient = new HttpClient();
@@ -57,14 +96,13 @@ public class HttpTest : MonoBehaviour
 
             var response = await _httpClient.GetAsync(uriBuilder.Uri);
             var responseBody = await response.Content.ReadAsStringAsync();
-            Debug.Log(responseBody);
             AudioResponse json = JsonUtility.FromJson<AudioResponse>(responseBody);
-            return json.AudioBinary;
+            return json.audio_binary;
         }
         catch (HttpRequestException e)
         {
             Debug.Log($"HTTP request failed: {e}");
-            return "Error";
+            return "text";
         }
     }
     

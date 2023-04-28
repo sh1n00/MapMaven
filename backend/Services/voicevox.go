@@ -48,7 +48,7 @@ func TextToQuery(text string, speaker string) (*Types.VoiceVox, error) {
 	return response, nil
 }
 
-func TextToVoice(speaker, enableInterrogativeUpspeak, text string) ([]byte, error) {
+func TextToVoice(speaker, enableInterrogativeUpspeak, text string) (*Types.AudioResponse, error) {
 	url := "http://localhost:50021/synthesis"
 
 	reqBody, err := TextToQuery(text, speaker)
@@ -98,11 +98,6 @@ func TextToVoice(speaker, enableInterrogativeUpspeak, text string) ([]byte, erro
 	audioResponse := Types.AudioResponse{
 		AudioBinary: body,
 	}
-	jsonBytes, err := json.MarshalIndent(audioResponse, "", "  ")
-	if err != nil {
-		log.Println(err)
-		return nil, err
-	}
 
 	currentDir, err := os.Getwd()
 	if err != nil {
@@ -114,5 +109,5 @@ func TextToVoice(speaker, enableInterrogativeUpspeak, text string) ([]byte, erro
 		log.Println(err)
 	}
 
-	return jsonBytes, nil
+	return &audioResponse, nil
 }
