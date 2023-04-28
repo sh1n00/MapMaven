@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using static GoogleCloudStreamingSpeechToText.StreamingRecord;
 
+
 public class StateMachine : MonoBehaviour
 {
     private enum gameState
@@ -34,14 +35,17 @@ public class StateMachine : MonoBehaviour
                 break;
         }
     }
-    public void EndRecognition(string finalDetection)
+    public async void EndRecognition(string finalDetection)
     {
         _currentState = gameState.awaitReply;
-        Debug.Log(finalDetection);
+        var text = await HttpTest.Chat(finalDetection);
+        Debug.Log(text);
     }
-    public void StartRecognition(string interimResult)
+    public void StartRecognition()
     {
         _currentState= gameState.recognition;
 
     }
+
+
 }
