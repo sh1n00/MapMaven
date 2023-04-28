@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,6 +7,7 @@ using static GoogleCloudStreamingSpeechToText.StreamingRecord;
 
 public class StateMachine : MonoBehaviour
 {
+    public AudioSource audioSource;
     private enum gameState
     {
         standby,
@@ -38,8 +40,12 @@ public class StateMachine : MonoBehaviour
     public async void EndRecognition(string finalDetection)
     {
         _currentState = gameState.awaitReply;
-        var text = await HttpTest.Chat(finalDetection);
+        var text = await HttpTest.GuideByText(finalDetection);
         Debug.Log(text);
+        var test = await HttpTest.TextToAudio("1", "true", text);
+        byte[] binaryData = Convert.FromBase64String(test);
+        AudioClip clip = Wav.ToAudioClip(binaryData, "test");
+        audioSource.PlayOneShot(clip);
     }
     public void StartRecognition()
     {

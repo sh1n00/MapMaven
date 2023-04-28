@@ -13,8 +13,8 @@ public class HttpTest : MonoBehaviour
 
     async void Start()
     {
-        var test = await Chat("Hello");
-        Debug.Log(test);
+        //var test = await Chat("Hello");
+        //Debug.Log(test);
         //byte[] data = System.Text.Encoding.UTF8.GetBytes(test);
         //float[] samples = new float[data.Length / 4]; //size of a float is 4 bytes
         //Buffer.BlockCopy(data, 0, samples, 0, data.Length);
@@ -29,14 +29,17 @@ public class HttpTest : MonoBehaviour
         //AudioSource.PlayClipAtPoint(clip, transform.position);
         AudioSource audioSource = GetComponent<AudioSource>();
         var test1 = await GuideByText("サイバネティクスの場所はどこですか?");
+        Debug.Log(test1);
         var test = await TextToAudio("1", "true", test1);
         byte[] binaryData = Convert.FromBase64String(test);
+        Debug.Log(binaryData);
         AudioClip clip = Wav.ToAudioClip(binaryData, "test");
         audioSource.PlayOneShot(clip);
     }
 
-    private async Task<string> GuideByText(string text)
+    public static async Task<string> GuideByText(string text)
     {
+        HttpClient _httpClient = new HttpClient();
         var url = "http://localhost:8080/guide-by-text";
         var query = new Dictionary<String, String>
         {
@@ -68,7 +71,7 @@ public class HttpTest : MonoBehaviour
         }
     }
 
-    private async Task<string> TextToAudio(string speaker, string enable_interrogative_upspeak, string text)
+    public static async Task<string> TextToAudio(string speaker, string enable_interrogative_upspeak, string text)
     {
 
         HttpClient _httpClient = new HttpClient();
@@ -112,7 +115,7 @@ public class HttpTest : MonoBehaviour
         var url = "http://localhost:8080/chat";
         var query = new Dictionary<String, String>
         {
-            { "content", text }
+            { "text", text }
         };
         var queryString = System.Web.HttpUtility.ParseQueryString("");
      
