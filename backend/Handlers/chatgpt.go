@@ -63,7 +63,7 @@ func GuideByText(w http.ResponseWriter, r *http.Request) {
 	mSorted := utils.InstructSortByCosin(m)
 
 	// TopNを抜き出す処理
-	selectedInstructions := Services.SelectInstruction(mSorted, 3)
+	selectedInstructions := Services.SelectInstruction(mSorted, 5)
 
 	// prompt作成処理
 	prompt := utils.GenerateTemplate(strings.Join(selectedInstructions, "\n"), text)
